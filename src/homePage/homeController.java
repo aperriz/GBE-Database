@@ -55,7 +55,7 @@ public class homeController implements Initializable{
 		
 		try {
 
-			InputStream input = Base.class.getClassLoader().getResourceAsStream("config.properties");
+			InputStream input = getClass().getResourceAsStream("/common/config.properties");
 
 			Properties properties = new Properties();
 
@@ -159,7 +159,7 @@ public class homeController implements Initializable{
 		Parent root = null;
 		
 		try {
-			root = FXMLLoader.load(getClass().getResource("addGame.fxml"));
+			root = FXMLLoader.load(getClass().getResource("/common/addGame.fxml"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -168,7 +168,7 @@ public class homeController implements Initializable{
 		Base.globalStage.close();
 		
 		Base.globalScene = new Scene(root);
-		Base.globalScene.getStylesheets().add("style.css");
+		Base.globalScene.getStylesheets().add("/common/style.css");
 		Base.globalStage.setTitle("Add Game"); // displayed in window's title bar
 		Base.globalStage.setScene(Base.globalScene);
 		Base.globalStage.show();
