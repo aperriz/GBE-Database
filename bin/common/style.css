@@ -1,0 +1,40 @@
+*{
+	
+	-fx-background-color: #4a4844;
+	-fx-text-fill: white;
+	-fx-font-size: 24px;
+	
+}
+
+#gameNameView{
+	
+	-fx-border-type: solid;
+	-fx-border-color: black;
+	-fx-border-width: 0 2 0 0;
+	
+}
+
+.list-cell:filled:even {
+	-fx-background-color:#3B3B3B;
+}
+
+.list-cell:filled:odd{
+	-fx-background-color:#454545;
+}
+
+.button{
+	-fx-background-color:#456e50;
+}
+
+.hbox, .label{
+	-fx-background-color: transparent;
+}
+
+
+.label{
+	-fx-min-width:200px;
+	-fx-alignment:center;
+	-fx-text-fill:#41a65c;
+	-fx-font-weight: bolder;
+}
+
