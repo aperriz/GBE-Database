@@ -14,8 +14,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-public class AddGameController implements Initializable{
+import org.apache.commons.net.ftp.*;
 
+public class AddGameController implements Initializable{
+	
 	@FXML
 	TextField gameNameText;
 	
@@ -96,6 +98,13 @@ public class AddGameController implements Initializable{
 					fileChooser.getSelectedFile().getName().lastIndexOf("."), fileChooser.getSelectedFile().getName().length()));
 
 		}
+		
+	}
+	
+	@FXML
+	public void createGame() {
+		
+		
 		
 	}
 	

@@ -1,0 +1,23 @@
+*{
+	-fx-text-fill: white;
+	-fx-font-size: 16px;
+}
+
+.pane{
+	-fx-background-color:#4a4844;
+}
+
+.text-field, .text-field:focused{
+	-fx-background-color:grey;
+	-fx-control-inner-background:grey;
+	-fx-text-alignment:center;
+	-fx-alignment:center;
+}
+
+.button{
+	-fx-background-color:#456e50;
+}
+
+.label{
+	-fx-alignment:center;
+}
