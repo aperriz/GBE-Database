@@ -6,7 +6,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="447.0" prefWidth="684.0" styleClass="pane" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="addGamePage.AddGameController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="612.0" prefWidth="684.0" styleClass="pane" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="addGamePage.AddGameController">
    <children>
       <TextField fx:id="gameNameText" layoutX="243.0" layoutY="62.0" promptText="Game Name" />
       <ImageView fx:id="backgroundImage" fitHeight="140.625" fitWidth="250.0" layoutX="51.0" layoutY="125.0" pickOnBounds="true" />
@@ -15,6 +15,8 @@
       <Label fx:id="soundtrackLabel" contentDisplay="CENTER" layoutX="408.0" layoutY="256.0" minHeight="-Infinity" minWidth="-Infinity" prefWidth="200.0" text="No File Selected" textAlignment="CENTER" />
       <Button layoutX="439.0" layoutY="193.0" mnemonicParsing="false" onAction="#setAlertTone" prefHeight="39.0" prefWidth="138.0" text="Set Alert Tone" />
       <Button layoutX="439.0" layoutY="297.0" mnemonicParsing="false" onAction="#setSoundtrack" prefHeight="39.0" prefWidth="138.0" text="Set Soundtrack" />
-      <Button layoutX="285.0" layoutY="373.0" mnemonicParsing="false" onAction="#createGame" text="Create Game" />
+      <Button layoutX="285.0" layoutY="484.0" mnemonicParsing="false" onAction="#createGame" text="Create Game" />
+      <Label fx:id="fontLabel" contentDisplay="CENTER" layoutX="408.0" layoutY="351.0" minHeight="-Infinity" minWidth="-Infinity" prefWidth="200.0" text="lorem ipsum dolor sit amet" textAlignment="CENTER" />
+      <Button layoutX="439.0" layoutY="390.0" mnemonicParsing="false" onAction="#setFont" prefHeight="39.0" prefWidth="138.0" text="Set Font" />
    </children>
 </Pane>

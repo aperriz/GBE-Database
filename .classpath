@@ -8,8 +8,8 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/MariaDBJFX"/>
 	<classpathentry kind="lib" path="C:/Users/alecp/Downloads/commons-net-3.10.0/commons-net-3.10.0.jar"/>
-	<classpathentry kind="lib" path="C:/Users/alecp/Downloads/controlsfx-11.2.0/controlsfx/build/libs/controlsfx-11.2.0.jar"/>
-	<classpathentry kind="lib" path="C:/Users/alecp/Downloads/controlsfx-11.2.0/controlsfx/build/libs/controlsfx-11.2.0-javadoc.jar"/>
-	<classpathentry kind="lib" path="C:/Users/alecp/Downloads/controlsfx-11.2.0/controlsfx/build/libs/controlsfx-11.2.0-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/alecp/Documents/Java Libraries/controlsfx/controlsfx-11.2.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/alecp/Documents/Java Libraries/controlsfx/controlsfx-11.2.0-javadoc.jar"/>
+	<classpathentry kind="lib" path="C:/Users/alecp/Documents/Java Libraries/controlsfx/controlsfx-11.2.0-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

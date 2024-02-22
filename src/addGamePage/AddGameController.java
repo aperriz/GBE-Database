@@ -1,5 +1,10 @@
 package addGamePage;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -32,16 +37,28 @@ public class AddGameController implements Initializable{
 	@FXML
 	Label soundtrackLabel;
 	
+	@FXML
+	Label fontLabel;
+	
 	Font selectedFont;
+	
+	File temp = new File("temp.txt");
 	
 	JFileChooser fileChooser = new JFileChooser(System.getProperty("user.home") + "\\Downloads");
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		// TODO Auto-generated method stub
-		
-		
-		
+		if(temp.exists()) {
+			try {
+				FileReader fr = new FileReader("temp.txt");
+				
+				selectedFont = new Font(fr.read());
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 	@FXML
@@ -107,18 +124,27 @@ public class AddGameController implements Initializable{
 	
 	@FXML
 	public void setFont() {
-		FontSelectorDialog fs = new FontSelectorDialog(null);
+		FontSelectorDialog fs = new FontSelectorDialog(fontLabel.getFont());
 		
-		fs.setTitle("Select Font");
 		Optional<Font> response = fs.showAndWait();
 		
-		if(response != null) {
-			
-			selectedFont = response.get();
-			System.out.println(response.get().getFamily());
-			System.out.println(response.get().getName());
-			System.out.println(response.get().getSize());
+		if(!temp.exists() && response.get().getFamily() != "" && response.get() != null) {
+			try {
+				temp.createNewFile();
+				
+				FileWriter fw = new FileWriter("temp.txt");
+				
+				fw.write(response.get().toString());
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
+		fs.setTitle("Select Font");
+		fs.showAndWait().ifPresent(alertToneLabel::setFont);
+		
+		
 	}
 	
 	@FXML
