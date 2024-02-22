@@ -1,11 +1,14 @@
 package addGamePage;
 
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
+
+import org.controlsfx.dialog.FontSelectorDialog;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -13,8 +16,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-
-import org.apache.commons.net.ftp.*;
+import javafx.scene.text.Font;
 
 public class AddGameController implements Initializable{
 	
@@ -29,6 +31,8 @@ public class AddGameController implements Initializable{
 	
 	@FXML
 	Label soundtrackLabel;
+	
+	Font selectedFont;
 	
 	JFileChooser fileChooser = new JFileChooser(System.getProperty("user.home") + "\\Downloads");
 	
@@ -99,6 +103,22 @@ public class AddGameController implements Initializable{
 
 		}
 		
+	}
+	
+	@FXML
+	public void setFont() {
+		FontSelectorDialog fs = new FontSelectorDialog(null);
+		
+		fs.setTitle("Select Font");
+		Optional<Font> response = fs.showAndWait();
+		
+		if(response != null) {
+			
+			selectedFont = response.get();
+			System.out.println(response.get().getFamily());
+			System.out.println(response.get().getName());
+			System.out.println(response.get().getSize());
+		}
 	}
 	
 	@FXML
