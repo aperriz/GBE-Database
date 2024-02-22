@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 
-
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" />
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="447.0" prefWidth="684.0" styleClass="pane" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="addGamePage.AddGameController">
+   <children>
+      <TextField fx:id="gameNameText" layoutX="243.0" layoutY="62.0" promptText="Game Name" />
+      <ImageView fx:id="backgroundImage" fitHeight="140.625" fitWidth="250.0" layoutX="51.0" layoutY="125.0" pickOnBounds="true" />
+      <Button fx:id="backgroundButton" layoutX="109.0" layoutY="301.0" mnemonicParsing="false" onAction="#setBackground" text="Set Background" />
+      <Label fx:id="alertToneLabel" contentDisplay="CENTER" layoutX="408.0" layoutY="142.0" minHeight="-Infinity" minWidth="-Infinity" prefWidth="200.0" text="No File Selected" textAlignment="CENTER" />
+      <Label fx:id="soundtrackLabel" contentDisplay="CENTER" layoutX="408.0" layoutY="256.0" minHeight="-Infinity" minWidth="-Infinity" prefWidth="200.0" text="No File Selected" textAlignment="CENTER" />
+      <Button layoutX="439.0" layoutY="193.0" mnemonicParsing="false" onAction="#setAlertTone" prefHeight="39.0" prefWidth="138.0" text="Set Alert Tone" />
+      <Button layoutX="439.0" layoutY="297.0" mnemonicParsing="false" onAction="#setSoundtrack" prefHeight="39.0" prefWidth="138.0" text="Set Soundtrack" />
+      <Button layoutX="285.0" layoutY="373.0" mnemonicParsing="false" onAction="#createGame" text="Create Game" />
+   </children>
+</Pane>

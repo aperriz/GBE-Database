@@ -7,5 +7,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/MariaDBJFX"/>
+	<classpathentry kind="lib" path="C:/Users/alecp/Downloads/commons-net-3.10.0/commons-net-3.10.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

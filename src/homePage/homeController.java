@@ -168,7 +168,7 @@ public class homeController implements Initializable{
 		Base.globalStage.close();
 		
 		Base.globalScene = new Scene(root);
-		Base.globalScene.getStylesheets().add("/common/style.css");
+		Base.globalScene.getStylesheets().add("/addGamePage/AddGame.css");
 		Base.globalStage.setTitle("Add Game"); // displayed in window's title bar
 		Base.globalStage.setScene(Base.globalScene);
 		Base.globalStage.show();
