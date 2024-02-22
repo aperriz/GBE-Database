@@ -54,6 +54,10 @@ public class AddGameController implements Initializable{
 				
 				selectedFont = new Font(fr.read());
 				
+				temp.delete();
+				
+				fr.close();
+				
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -134,7 +138,11 @@ public class AddGameController implements Initializable{
 				
 				FileWriter fw = new FileWriter("temp.txt");
 				
-				fw.write(response.get().toString());
+				fw.write(String.format("%s", response.get()));
+				
+				System.out.printf("%s", response.get());
+				
+				fw.close();
 				
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
