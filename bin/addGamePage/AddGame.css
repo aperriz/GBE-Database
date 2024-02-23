@@ -1,10 +1,7 @@
-*{
-	-fx-text-fill: white;
-	-fx-font-size: 16px;
-}
-
 .pane{
 	-fx-background-color:#4a4844;
+	-fx-text-fill: white;
+	-fx-font-size: 16px;
 }
 
 .text-field, .text-field:focused{
@@ -12,12 +9,23 @@
 	-fx-control-inner-background:grey;
 	-fx-text-alignment:center;
 	-fx-alignment:center;
+	-fx-text-fill: white;
+	-fx-font-size: 16px;
 }
 
 .button{
 	-fx-background-color:#456e50;
+	-fx-text-fill: white;
+	-fx-font-size: 16px;
+}
+
+.menu-item, .menu, .color-picker, .combo-box, .combo-box-base, .picker-color, .color-palette-region, .color-picker-grid, .color-picker{
+	-fx-background-color:#456e50;
+	-fx-text-fill:black;
 }
 
 .label{
 	-fx-alignment:center;
+	-fx-text-fill: white;
+	-fx-font-size: 16px;
 }

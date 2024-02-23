@@ -30,6 +30,7 @@ public class homeController implements Initializable{
 	ResultSet resultSet = null;
 	
 	String selectedGame = null;
+	public static Properties properties = new Properties();
 	
 	@FXML
 	private Button addGameButton;
@@ -56,8 +57,6 @@ public class homeController implements Initializable{
 		try {
 
 			InputStream input = getClass().getResourceAsStream("/common/config.properties");
-
-			Properties properties = new Properties();
 
 			properties.load(input);
 
