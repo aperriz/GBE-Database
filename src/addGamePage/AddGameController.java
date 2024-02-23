@@ -42,27 +42,13 @@ public class AddGameController implements Initializable{
 	
 	Font selectedFont;
 	
-	File temp = new File("temp.txt");
+	File temp = new File("tmp");
 	
 	JFileChooser fileChooser = new JFileChooser(System.getProperty("user.home") + "\\Downloads");
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		if(temp.exists()) {
-			try {
-				FileReader fr = new FileReader("temp.txt");
-				
-				selectedFont = new Font(fr.read());
-				
-				temp.delete();
-				
-				fr.close();
-				
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+		
 	}
 
 	@FXML
@@ -136,7 +122,7 @@ public class AddGameController implements Initializable{
 			try {
 				temp.createNewFile();
 				
-				FileWriter fw = new FileWriter("temp.txt");
+				FileWriter fw = new FileWriter("tmp");
 				
 				fw.write(String.format("%s", response.get()));
 				
@@ -158,7 +144,25 @@ public class AddGameController implements Initializable{
 	@FXML
 	public void createGame() {
 		
-		
+		if(new File("tmp").exists()) {
+			try {
+				FileReader fr = new FileReader("tmp");
+				
+				selectedFont = new Font(fr.read());
+				
+				fr.close();
+				
+				if(temp.delete()) {
+					System.out.println("Deleted");
+				}else {
+					System.out.println("No");
+				}
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		
 	}
 	
