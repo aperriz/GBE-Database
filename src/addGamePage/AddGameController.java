@@ -4,9 +4,13 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Optional;
-import java.util.Properties;
 import java.util.ResourceBundle;
 import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
@@ -288,12 +292,30 @@ public class AddGameController implements Initializable{
 	@FXML
 	public void createGame() {
 		
+		String databaseURL = homeController.properties.getProperty("dbURL");
+		String databaseUserName = homeController.properties.getProperty("dbUserName");
+		String databasePassword = homeController.properties.getProperty("dbPassword");
+
 		try {
-			ChannelSftp sftp = setupJsch();
-		} catch (JSchException e) {
-			// TODO Auto-generated catch block
+			Connection con = DriverManager.getConnection(databaseURL, databaseUserName, databasePassword);
+
+			Statement statement = con.createStatement();
+
+			String SQL = String.format("SELECT * FROM leaderboard.games WHERE Name = \"%s\"", gameNameText.getText());
+
+			ResultSet resultSet = statement.executeQuery(SQL);
+
+			System.out.println(String.format("%s", gameNameText.getText()));
+			
+			if(!resultSet.next()) {
+				SQL = String.format("INSERT INTO leaderboard.games (Name) VALUES (\"%s\")", gameNameText.getText());
+				statement.execute(SQL);
+			}
+		}
+		catch(SQLException e){
 			e.printStackTrace();
 		}
+
 		
 	}
 	

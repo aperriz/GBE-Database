@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 public class Base extends Application {   
@@ -19,6 +20,7 @@ public class Base extends Application {
          FXMLLoader.load(getClass().getResource("/common/home.fxml"));
       
       globalStage = new Stage();
+      globalStage.getIcons().add(new Image("logo.png"));
       
       globalScene = new Scene(root);
       globalScene.getStylesheets().add("/common/style.css");

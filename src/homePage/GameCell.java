@@ -2,15 +2,19 @@ package homePage;
 
 import javafx.scene.text.Font;
 
-import javax.swing.GroupLayout.Alignment;
+import java.io.IOException;
 
+import common.Base;
+import editGame.EditGameController;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
-import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Priority;
 import javafx.scene.text.TextAlignment;
 
 public class GameCell extends ListCell<String> {
@@ -35,6 +39,37 @@ public class GameCell extends ListCell<String> {
 		nameLabel.setPrefWidth(USE_PREF_SIZE);
 		
 		playButton.setOnAction(e -> homeController.selectGame(name));
+		editButton.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent arg0) {
+				
+				try {
+					Parent root = 
+					         FXMLLoader.load(getClass().getResource("/common/edit.fxml"));
+					
+					EditGameController.gameName = name;
+					
+					//Close current window and open home page
+					Base.globalStage.close();
+					
+					Base.globalScene = new Scene(root);
+					Base.globalScene.getStylesheets().add("/common/style.css");
+					Base.globalStage.setTitle(String.format("Edit Game: %s", name));
+					Base.globalStage.setResizable(false);
+					Base.globalStage.setScene(Base.globalScene);
+					Base.globalStage.show();
+					
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}			
+				
+			}
+			
+		});
+		
+		
 		
 		nameLabel.setMinSize(100, BASELINE_OFFSET_SAME_AS_HEIGHT);
 		playButton.setMinSize(USE_PREF_SIZE, BASELINE_OFFSET_SAME_AS_HEIGHT);
