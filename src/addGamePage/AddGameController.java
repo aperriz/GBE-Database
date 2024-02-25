@@ -311,6 +311,13 @@ public class AddGameController implements Initializable{
 				SQL = String.format("INSERT INTO leaderboard.games (Name) VALUES (\"%s\")", gameNameText.getText());
 				statement.execute(SQL);
 			}
+			
+			resultSet.close();
+			statement.close();
+			con.close();
+			
+			back();
+			
 		}
 		catch(SQLException e){
 			e.printStackTrace();
@@ -319,24 +326,41 @@ public class AddGameController implements Initializable{
 		
 	}
 	
-	@FXML
-	public void back() throws IOException {
-		
-		Parent root = 
-		         FXMLLoader.load(getClass().getResource("/common/home.fxml"));
-		
-		//Reset Files
-		if(temp.exists()) {
-			if(!temp.delete()) {
-				FileWriter fw = new FileWriter(temp);
-				fw.write("");
-				fw.close();
-				temp.delete();
+	public void resetGame() {
+		try {
+			//Reset Files
+			if(temp.exists()) {
+				if(!temp.delete()) {
+					FileWriter fw = new FileWriter(temp);
+					fw.write("");
+					fw.close();
+					temp.delete();
+				}
 			}
+			
+			selectedFont = null;
+		}
+		catch(IOException e){
+			e.printStackTrace();
 		}
 		
-		selectedFont = null;
+		for(File f: fileList) {
+			f = null;
+		}
+	}
+	
+	@FXML
+	public void back() {
 		
+		Parent root = null;
+		try {
+			root = FXMLLoader.load(getClass().getResource("/common/home.fxml"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		resetGame();
 		
 		//Close current window and open home page
 		Base.globalStage.close();
@@ -347,10 +371,6 @@ public class AddGameController implements Initializable{
 		Base.globalStage.setResizable(false);
 		Base.globalStage.setScene(Base.globalScene);
 		Base.globalStage.show();
-		
-		for(File f: fileList) {
-			f = null;
-		}
 		
 	}
 	
