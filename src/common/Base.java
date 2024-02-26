@@ -15,7 +15,6 @@ public class Base extends Application {
 	@Override
    public void start(Stage stage) throws Exception {
 		
-		
       Parent root = 
          FXMLLoader.load(getClass().getResource("/common/home.fxml"));
       

@@ -45,6 +45,8 @@ public class homeController implements Initializable{
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		// TODO Auto-generated method stub
 		
+		gameView.setSelectionModel(new NoSelectionModel<GameCell>());
+		
 		addGameButton.setOnAction(e -> addGame());
 		addGameButton.setStyle("-fx-font-size: 18px");
 
@@ -82,14 +84,12 @@ public class homeController implements Initializable{
 			
 			gameView.setItems(games);
 			
-
-
 		}
 		catch(IOException | SQLException e) {
 			e.printStackTrace();
 		}
 		finally {
-
+			
 			try {
 				if(resultSet != null) {
 					resultSet.close();
@@ -102,25 +102,18 @@ public class homeController implements Initializable{
 				if(statement != null) {
 					statement.close();
 				}
-
 			}catch(SQLException e) {
 				e.printStackTrace();
 			}
-
+			
 			try {
-
 				if(con != null) {
-
 					con.close();
-
 				}
-
 			}catch(SQLException e) {
 				e.printStackTrace();
 			}
-
 		}
-
 	}
 	
 	public URL getURL(String fileName) {
@@ -163,8 +156,6 @@ public class homeController implements Initializable{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		Base.globalStage.close();
 		
 		Base.globalScene = new Scene(root);
 		Base.globalScene.getStylesheets().add("/addGamePage/AddGame.css");

@@ -2,11 +2,12 @@ package editGame;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Connection;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import common.Base;
@@ -17,6 +18,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 
 public class EditGameController implements Initializable{
 
@@ -28,9 +33,6 @@ public class EditGameController implements Initializable{
 		Parent root;
 		try {
 			root = FXMLLoader.load(getClass().getResource("/common/home.fxml"));
-			
-			//Close current window and open home page
-			Base.globalStage.close();
 			
 			Base.globalScene = new Scene(root);
 			Base.globalScene.getStylesheets().add("/common/style.css");
@@ -49,32 +51,45 @@ public class EditGameController implements Initializable{
 	@FXML
     void delGame(ActionEvent event) {
 		
-		String databaseURL = homeController.properties.getProperty("dbURL");
-		String databaseUserName = homeController.properties.getProperty("dbUserName");
-		String databasePassword = homeController.properties.getProperty("dbPassword");
+		ButtonType yes = new ButtonType("Yes", ButtonBar.ButtonData.OK_DONE);
+		ButtonType no = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
+		
+		Alert alert = new Alert(AlertType.CONFIRMATION, String.format("Are you sure you want to delete %s?", gameName), yes, no);
+		
+		alert.setHeaderText(String.format("Delete %s?", gameName));
+		
+		Optional<ButtonType> resp = alert.showAndWait();
+		
+		if(resp.get() == yes) {
+			
+			String databaseURL = homeController.properties.getProperty("dbURL");
+			String databaseUserName = homeController.properties.getProperty("dbUserName");
+			String databasePassword = homeController.properties.getProperty("dbPassword");
 
-		try {
-			Connection con = DriverManager.getConnection(databaseURL, databaseUserName, databasePassword);
+			try {
+				Connection con = DriverManager.getConnection(databaseURL, databaseUserName, databasePassword);
 
-			Statement statement = con.createStatement();
+				Statement statement = con.createStatement();
 
-			String SQL = String.format("DELETE FROM leaderboard.games WHERE Name = \"%s\"", gameName);
+				String SQL = String.format("DELETE FROM leaderboard.games WHERE Name = \"%s\"", gameName);
 
-			ResultSet resultSet = statement.executeQuery(SQL);
+				ResultSet resultSet = statement.executeQuery(SQL);
 
-			if(!resultSet.next()) {
-				System.out.printf("%s deleted!%n", gameName);
+				if(!resultSet.next()) {
+					System.out.printf("%s deleted!%n", gameName);
+				}
+				
+				resultSet.close();
+				statement.close();
+				con.close();
+				
+				back();
+				
+			}
+			catch(SQLException e){
+				e.printStackTrace();
 			}
 			
-			resultSet.close();
-			statement.close();
-			con.close();
-			
-			back();
-			
-		}
-		catch(SQLException e){
-			e.printStackTrace();
 		}
 		
     }
@@ -84,5 +99,7 @@ public class EditGameController implements Initializable{
 		// TODO Auto-generated method stub
 		
 	}
+	
+	
 	
 }

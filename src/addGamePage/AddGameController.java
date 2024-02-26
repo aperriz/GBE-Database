@@ -18,12 +18,10 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.controlsfx.dialog.FontSelectorDialog;
 
+import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
-import com.jcraft.jsch.SftpException;
-
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -64,15 +62,17 @@ public class AddGameController implements Initializable{
 	
 	private Font selectedFont = null;
 	
-	File alertSound, soundtrack, winSound, loseSound, backgroundImageFile;
+	private File alertSound, soundtrack, winSound, loseSound, backgroundImageFile;
 	
-	ArrayList<File> fileList = new ArrayList<File>();
+	private ArrayList<File> fileList = new ArrayList<File>();
 	
-	File temp = new File("tmp");
+	private File temp = new File("tmp");
 	
-	JFileChooser fileChooser = new JFileChooser(System.getProperty("user.home") + "\\Downloads");
+	private JFileChooser fileChooser = new JFileChooser(System.getProperty("user.home") + "\\Downloads");
 	
-	
+	private String smtpUsername = homeController.properties.getProperty("sftpUser");
+	private String smtpPassword = homeController.properties.getProperty("sftpPassword");
+	private String smtpRemoteHost = homeController.properties.getProperty("sftpHost");
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -292,37 +292,47 @@ public class AddGameController implements Initializable{
 	@FXML
 	public void createGame() {
 		
-		String databaseURL = homeController.properties.getProperty("dbURL");
-		String databaseUserName = homeController.properties.getProperty("dbUserName");
-		String databasePassword = homeController.properties.getProperty("dbPassword");
-
-		try {
-			Connection con = DriverManager.getConnection(databaseURL, databaseUserName, databasePassword);
-
-			Statement statement = con.createStatement();
-
-			String SQL = String.format("SELECT * FROM leaderboard.games WHERE Name = \"%s\"", gameNameText.getText());
-
-			ResultSet resultSet = statement.executeQuery(SQL);
-
-			System.out.println(String.format("%s", gameNameText.getText()));
-			
-			if(!resultSet.next()) {
-				SQL = String.format("INSERT INTO leaderboard.games (Name) VALUES (\"%s\")", gameNameText.getText());
-				statement.execute(SQL);
+		boolean cont = true;
+		
+		for (File f : fileList) {
+			if (f == null) {
+				//cont = false;
 			}
-			
-			resultSet.close();
-			statement.close();
-			con.close();
-			
-			back();
-			
 		}
-		catch(SQLException e){
-			e.printStackTrace();
-		}
+		
+		if(cont) {
+			
 
+			
+			try {
+				JSch jsch = new JSch();
+				Session session = jsch.getSession(smtpUsername, "aperriz.chickenkiller.com", 22);
+				session.setPassword(smtpPassword);
+				session.setConfig("StrictHostKeyChecking", "no"); 
+				session.connect();
+				
+				Channel channel = session.openChannel("sftp");
+				channel.connect();
+				ChannelSftp sftp = (ChannelSftp) channel;
+				
+				System.out.println(sftp.pwd() + "/xampp/htdocs/");
+				
+				sftp.cd("/xampp/htdocs/");
+				
+				System.out.println(sftp.pwd());
+				
+				sftp.put(alertSound.getAbsolutePath(), String.format("%s%s", gameNameText.getText(), alertSound.getName().substring(alertSound.getName().lastIndexOf("."), alertSound.getName().length())));
+				
+				sftp.disconnect();
+				channel.disconnect();
+				session.disconnect();
+			}
+			catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		back();
 		
 	}
 	
@@ -362,9 +372,6 @@ public class AddGameController implements Initializable{
 		
 		resetGame();
 		
-		//Close current window and open home page
-		Base.globalStage.close();
-		
 		Base.globalScene = new Scene(root);
 		Base.globalScene.getStylesheets().add("/common/style.css");
 		Base.globalStage.setTitle("Game Select");
@@ -373,9 +380,7 @@ public class AddGameController implements Initializable{
 		Base.globalStage.show();
 		
 	}
-	
-	
-	
+		
 	private static String toHexString(Color color) {
 		  int r = ((int) Math.round(color.getRed()     * 255)) << 24;
 		  int g = ((int) Math.round(color.getGreen()   * 255)) << 16;
@@ -384,42 +389,4 @@ public class AddGameController implements Initializable{
 		  return String.format("#%08X", (r + g + b + a));
 		}
 	
-	//https://www.baeldung.com/java-file-sftp
-	private ChannelSftp setupJsch() throws JSchException{
-		String username = homeController.properties.getProperty("sftpUser");
-		String password = homeController.properties.getProperty("sftpPassword");
-		String remoteHost = homeController.properties.getProperty("sftpHost");
-		
-		JSch jsch = new JSch();		
-		jsch.setKnownHosts(System.getProperty("user.home") + "/.ssh/known_hosts");
-		Session jschSession = jsch.getSession(username, remoteHost);
-		jschSession.setPassword(password);
-	    jschSession.connect();
-	    return (ChannelSftp) jschSession.openChannel("sftp");
-		
-	}
-	
-	public void whenUploadFileUsingJsch_thenSuccess() throws JSchException, SftpException {
-	    ChannelSftp channelSftp = setupJsch();
-	    channelSftp.connect();
-	 
-	    String localFile = "src/main/resources/sample.txt";
-	    String remoteDir = "remote_sftp_test/";
-	 
-	    channelSftp.put(localFile, remoteDir + "jschFile.txt");
-	 
-	    channelSftp.exit();
-	}
-	
-	public void whenDownloadFileUsingJsch_thenSuccess() throws JSchException, SftpException {
-	    ChannelSftp channelSftp = setupJsch();
-	    channelSftp.connect();
-	 
-	    String remoteFile = "welcome.txt";
-	    String localDir = "src/main/resources/";
-	 
-	    channelSftp.get(remoteFile, localDir + "jschFile.txt");
-	 
-	    channelSftp.exit();
-	}
 }

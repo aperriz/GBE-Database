@@ -14,7 +14,7 @@
       <Button fx:id="backgroundButton" layoutX="110.0" layoutY="309.0" mnemonicParsing="false" onAction="#setBackground" text="Set Background" />
       <Label fx:id="alertToneLabel" contentDisplay="CENTER" layoutX="342.0" layoutY="117.0" minHeight="-Infinity" minWidth="-Infinity" prefWidth="200.0" text="No File Selected" textAlignment="CENTER" />
       <Label fx:id="soundtrackLabel" contentDisplay="CENTER" layoutX="342.0" layoutY="266.0" minHeight="-Infinity" minWidth="-Infinity" prefWidth="200.0" text="No File Selected" textAlignment="CENTER" />
-      <Button layoutX="373.0" layoutY="168.0" mnemonicParsing="false" onAction="#setAlertTone" prefHeight="39.0" prefWidth="138.0" text="Set Alert Tone" />
+      <Button layoutX="373.0" layoutY="156.0" mnemonicParsing="false" onAction="#setAlertTone" prefHeight="39.0" prefWidth="138.0" text="Set Alert Tone" />
       <Button layoutX="373.0" layoutY="307.0" mnemonicParsing="false" onAction="#setSoundtrack" prefHeight="39.0" prefWidth="138.0" text="Set Soundtrack" />
       <Button layoutX="385.0" layoutY="412.0" mnemonicParsing="false" onAction="#createGame" text="Create Game" />
       <Label fx:id="fontLabel" contentDisplay="CENTER" layoutX="600.0" layoutY="28.0" minHeight="-Infinity" minWidth="-Infinity" prefWidth="200.0" text="lorem ipsum dolor sit amet" textAlignment="CENTER" />

@@ -32,7 +32,7 @@ public class GameCell extends ListCell<String> {
 		setStyle("-fx-background-color: transparent;");
 		hbox.setStyle("-fx-background-color: transparent;");
 		
-		name = s;		
+		name = s;
 		nameLabel.setTextAlignment(TextAlignment.CENTER);
 		playButton.setTextAlignment(TextAlignment.CENTER);
 		editButton.setTextAlignment(TextAlignment.CENTER);
@@ -50,9 +50,6 @@ public class GameCell extends ListCell<String> {
 					
 					EditGameController.gameName = name;
 					
-					//Close current window and open home page
-					Base.globalStage.close();
-					
 					Base.globalScene = new Scene(root);
 					Base.globalScene.getStylesheets().add("/common/style.css");
 					Base.globalStage.setTitle(String.format("Edit Game: %s", name));
@@ -68,8 +65,6 @@ public class GameCell extends ListCell<String> {
 			}
 			
 		});
-		
-		
 		
 		nameLabel.setMinSize(100, BASELINE_OFFSET_SAME_AS_HEIGHT);
 		playButton.setMinSize(USE_PREF_SIZE, BASELINE_OFFSET_SAME_AS_HEIGHT);
