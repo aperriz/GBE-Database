@@ -302,7 +302,33 @@ public class AddGameController implements Initializable{
 		
 		if(cont) {
 			
+			String databaseURL = homeController.properties.getProperty("dbURL");
+			String databaseUserName = homeController.properties.getProperty("dbUserName");
+			String databasePassword = homeController.properties.getProperty("dbPassword");
 
+			try {
+				Connection con = DriverManager.getConnection(databaseURL, databaseUserName, databasePassword);
+
+				Statement statement = con.createStatement();
+
+				String SQL = String.format("SELECT * FROM leaderboard.games WHERE Name = \"%s\"", gameNameText.getText());
+
+				ResultSet resultSet = statement.executeQuery(SQL);
+
+				System.out.println(String.format("%s", gameNameText.getText()));
+				
+				if(!resultSet.next()) {
+					SQL = String.format("INSERT INTO leaderboard.games (Name) VALUES (\"%s\")", gameNameText.getText());
+					//statement.execute(SQL);
+				}
+				
+				resultSet.close();
+				statement.close();
+				con.close();
+			}
+			catch (SQLException e) {
+				e.printStackTrace();
+			}
 			
 			try {
 				JSch jsch = new JSch();
@@ -319,9 +345,11 @@ public class AddGameController implements Initializable{
 				
 				sftp.cd("/xampp/htdocs/");
 				
+				sftp.mkdir(gameNameText.getText());
+				
 				System.out.println(sftp.pwd());
 				
-				sftp.put(alertSound.getAbsolutePath(), String.format("%s%s", gameNameText.getText(), alertSound.getName().substring(alertSound.getName().lastIndexOf("."), alertSound.getName().length())));
+				//sftp.put(alertSound.getAbsolutePath(), String.format("%s%s", gameNameText.getText(), alertSound.getName()));
 				
 				sftp.disconnect();
 				channel.disconnect();
