@@ -44,14 +44,14 @@ public class GameCell extends ListCell<String> {
 			@Override
 			public void handle(ActionEvent arg0) {
 				
+				EditGameController.setGameName(name);
+				
 				try {
 					Parent root = 
 					         FXMLLoader.load(getClass().getResource("/common/edit.fxml"));
 					
-					EditGameController.gameName = name;
-					
 					Base.globalScene = new Scene(root);
-					Base.globalScene.getStylesheets().add("/common/style.css");
+					Base.globalScene.getStylesheets().add("/editGame/EditGame.css");
 					Base.globalStage.setTitle(String.format("Edit Game: %s", name));
 					Base.globalStage.setResizable(false);
 					Base.globalStage.setScene(Base.globalScene);

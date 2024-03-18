@@ -22,6 +22,9 @@ import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
+import com.jcraft.jsch.SftpATTRS;
+import com.jcraft.jsch.SftpException;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -137,7 +140,7 @@ public class AddGameController implements Initializable{
 		if(returnValue == JFileChooser.APPROVE_OPTION) {
 
 			soundtrackLabel.setText(fileChooser.getSelectedFile().getName());
-			soundtrackLabel.setEllipsisString("..." + fileChooser.getSelectedFile().getName().substring(
+			soundtrackLabel.setEllipsisString(fileChooser.getSelectedFile().getName().substring(
 					fileChooser.getSelectedFile().getName().lastIndexOf("."), fileChooser.getSelectedFile().getName().length()));
 			soundtrack = fileChooser.getSelectedFile();
 			
@@ -161,8 +164,7 @@ public class AddGameController implements Initializable{
 		if(returnValue == JFileChooser.APPROVE_OPTION) {
 
 			alertToneLabel.setText(fileChooser.getSelectedFile().getName());
-			alertToneLabel.setEllipsisString("..." + fileChooser.getSelectedFile().getName().substring(
-					fileChooser.getSelectedFile().getName().lastIndexOf("."), fileChooser.getSelectedFile().getName().length()));
+			alertToneLabel.setEllipsisString(getFileExtention(fileChooser));
 			alertSound = fileChooser.getSelectedFile();
 			
 			fileChooser.setSelectedFile(null);
@@ -256,8 +258,7 @@ public class AddGameController implements Initializable{
 		if(returnValue == JFileChooser.APPROVE_OPTION) {
 
 			winLabel.setText(fileChooser.getSelectedFile().getName());
-			winLabel.setEllipsisString("..." + fileChooser.getSelectedFile().getName().substring(
-					fileChooser.getSelectedFile().getName().lastIndexOf("."), fileChooser.getSelectedFile().getName().length()));
+			winLabel.setEllipsisString(getFileExtention(fileChooser));
 			winSound = fileChooser.getSelectedFile();
 			
 			fileChooser.setSelectedFile(null);
@@ -279,8 +280,7 @@ public class AddGameController implements Initializable{
 		if(returnValue == JFileChooser.APPROVE_OPTION) {
 
 			lossLabel.setText(fileChooser.getSelectedFile().getName());
-			lossLabel.setEllipsisString("..." + fileChooser.getSelectedFile().getName().substring(
-					fileChooser.getSelectedFile().getName().lastIndexOf("."), fileChooser.getSelectedFile().getName().length()));
+			lossLabel.setEllipsisString(getFileExtention(fileChooser));
 			loseSound = fileChooser.getSelectedFile();
 			
 			fileChooser.setSelectedFile(null);
@@ -292,11 +292,14 @@ public class AddGameController implements Initializable{
 	@FXML
 	public void createGame() {
 		
+		String gameName = gameNameText.getText();
+		
 		boolean cont = true;
 		
 		for (File f : fileList) {
 			if (f == null) {
 				//cont = false;
+				//break;
 			}
 		}
 		
@@ -311,14 +314,14 @@ public class AddGameController implements Initializable{
 
 				Statement statement = con.createStatement();
 
-				String SQL = String.format("SELECT * FROM leaderboard.games WHERE Name = \"%s\"", gameNameText.getText());
+				String SQL = String.format("SELECT * FROM leaderboard.games WHERE Name = \"%s\"", gameName);
 
 				ResultSet resultSet = statement.executeQuery(SQL);
 
-				System.out.println(String.format("%s", gameNameText.getText()));
+				System.out.println(String.format("%s", gameName));
 				
 				if(!resultSet.next()) {
-					SQL = String.format("INSERT INTO leaderboard.games (Name) VALUES (\"%s\")", gameNameText.getText());
+					SQL = String.format("call leaderboard.createGame('%s');", gameName);
 					//statement.execute(SQL);
 				}
 				
@@ -341,15 +344,13 @@ public class AddGameController implements Initializable{
 				channel.connect();
 				ChannelSftp sftp = (ChannelSftp) channel;
 				
-				System.out.println(sftp.pwd() + "/xampp/htdocs/");
+				//System.out.println(sftp.pwd() + "/xampp/htdocs/game files");
 				
-				sftp.cd("/xampp/htdocs/");
+				createDirectory(sftp, gameName);
 				
-				sftp.mkdir(gameNameText.getText());
+				//alertSound, soundtrack, winSound, loseSound, backgroundImageFile
 				
-				System.out.println(sftp.pwd());
-				
-				//sftp.put(alertSound.getAbsolutePath(), String.format("%s%s", gameNameText.getText(), alertSound.getName()));
+				uploadFile(alertSound, sftp, gameName, "Alert");
 				
 				sftp.disconnect();
 				channel.disconnect();
@@ -416,5 +417,98 @@ public class AddGameController implements Initializable{
 		  int a = ((int) Math.round(color.getOpacity() * 255));
 		  return String.format("#%08X", (r + g + b + a));
 		}
+
+	private void uploadFile(File f, ChannelSftp sftp, String gameName, String fType){
+			// TODO Auto-generated method stub
+			try {
+				SftpATTRS attrs = null;
+				
+				String fileSuffix = getFileExtention(f);
+				
+				String noSpaceGameName = "";
+				
+				for(char ch : gameName.toCharArray()) {
+					if (ch != ' ') {
+						if(ch == gameName.toCharArray()[0]) {
+							ch = Character.toLowerCase(ch);
+						}
+						noSpaceGameName += ch;
+						
+					}
+				}
+				
+				try {
+					attrs = sftp.stat(sftp.pwd() + String.format("%s%s%s", noSpaceGameName, fType,
+							fileSuffix));
+				}catch(Exception e) {
+				}
+				
+				if(attrs == null) {
+					sftp.put(alertSound.getAbsolutePath(), String.format("%s%s%s", noSpaceGameName, fType,
+							fileSuffix));
+				}
+				else {
+					sftp.rm(String.format("%s%s%s", noSpaceGameName, fType,
+							fileSuffix));
+					
+					sftp.put(alertSound.getAbsolutePath(), String.format("%s%s%s", noSpaceGameName,fType, 
+							fileSuffix));
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	
+	private boolean createDirectory(ChannelSftp sftp, String gameName) {
+		try {
+			sftp.cd("/xampp/htdocs/game files/");
+			System.out.println(sftp.pwd());
+			
+			SftpATTRS attrs=null;
+			
+			try {
+			    attrs = sftp.stat(sftp.pwd() + gameName);
+			    return false;
+			} catch (Exception e) {
+			    System.out.println(sftp.pwd() + gameName + " not found");
+			}
+			
+			if (attrs == null || !attrs.isDir()) {
+				sftp.mkdir(gameName);
+				
+				try {
+				    attrs = sftp.stat(sftp.pwd() + gameName);
+				    System.out.println("gameName directory created successfully");	
+				    sftp.cd(gameName);
+				    System.out.println(sftp.pwd());
+				} catch (Exception e) {
+				    e.printStackTrace();
+				}
+				
+			}
+			else {
+				System.out.println(attrs.isDir());
+			}
+			
+			sftp.cd(gameName);
+			
+			System.out.println(sftp.pwd());
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+		return true;
+	}
+	
+	private String getFileExtention(File f) {
+		return f.getName().substring(f.getName().lastIndexOf("."), f.getName().length());
+	}
+	
+	private String getFileExtention(JFileChooser fc) {
+		
+		return fc.getSelectedFile().getName().substring(
+				fc.getSelectedFile().getName().lastIndexOf("."), fc.getSelectedFile().getName().length());
+		
+	}
 }
