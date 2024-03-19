@@ -89,6 +89,13 @@ public class EditGameController implements Initializable{
 		// TODO Auto-generated method stub
 		gameNameText.setText(gameName);
 		gameNameText.setEditable(false);
+		
+		fileList.add(alertSound);
+		fileList.add(soundtrack);
+		fileList.add(backgroundImageFile);
+		fileList.add(winSound);
+		fileList.add(loseSound);
+		
 		loadFiles();
 	}
 	
@@ -120,8 +127,6 @@ public class EditGameController implements Initializable{
 	
 	private void loadFiles() {
 		
-		String[] fileTypes = {"Alert", "Soundtrack", "Win", "Lose", "Background"};
-		
 		try {
 			JSch jsch = new JSch();
 			Session session = jsch.getSession(smtpUsername, "localhost", 22);
@@ -137,7 +142,35 @@ public class EditGameController implements Initializable{
 			
 			System.out.println(sftp.pwd());
 			
-			getFile("Alert", sftp);
+			backgroundImageFile = getFile("Background", sftp);
+			alertSound = getFile("Alert", sftp);
+			soundtrack = getFile("Soundtrack", sftp);
+			winSound = getFile("Win", sftp);
+			loseSound = getFile("Lose", sftp);
+			
+			if (backgroundImageFile != null) {
+				backgroundImage.setImage(new Image(backgroundImageFile.getAbsolutePath()));
+			}
+			
+			if (alertSound != null) {
+				alertToneLabel.setText(alertSound.getName());
+				alertToneLabel.setEllipsisString(getFileExtention(alertSound));
+			}
+			
+			if (soundtrack != null) {
+				soundtrackLabel.setText(soundtrack.getName());
+				soundtrackLabel.setEllipsisString(getFileExtention(soundtrack));
+			}
+			
+			if (winSound != null) {
+				winLabel.setText(winSound.getName());
+				winLabel.setEllipsisString(getFileExtention(winSound));
+			}
+			
+			if (loseSound != null) {
+				lossLabel.setText(loseSound.getName());
+				lossLabel.setEllipsisString(getFileExtention(loseSound));
+			}
 			
 			sftp.disconnect();
 			channel.disconnect();
@@ -383,10 +416,8 @@ public class EditGameController implements Initializable{
 			
 			String fileSuffix = getFileExtention(f);
 			
-			try {
-				attrs = sftp.stat(sftp.pwd() + String.format("%s%s%s", gameName, fType,
-						fileSuffix));
-			}catch(Exception e) {
+			if (fileExists(f, sftp, gameName, fType)) {
+				attrs = sftp.stat(String.format("%s%s%s", gameName, fType, fileSuffix));
 			}
 			
 			if(attrs == null) {
@@ -457,13 +488,13 @@ public class EditGameController implements Initializable{
 		
 			try {
 				fileLocation = sftp.pwd() + "/" + noSpaceGameName + type + "." + s;
-				System.out.println(fileLocation);
+				//System.out.println(fileLocation);
 				attrs = sftp.stat(fileLocation);
 				fileSuffix = "." + s;
 				break;
 			}
 			catch (Exception e) {
-				System.out.println(fileLocation + " not found!");
+				//System.out.println(fileLocation + " not found!");
 			}
 		}	
 		
@@ -471,7 +502,7 @@ public class EditGameController implements Initializable{
 			try {
 				Path tempPath = Files.createTempDirectory(noSpaceGameName + "Temp");
 				sftp.get(noSpaceGameName + type + fileSuffix, tempPath.toAbsolutePath().toString());
-				System.out.println(tempPath.getFileName());
+				//System.out.println(tempPath.getFileName());
 				return tempPath.toFile();
 				
 			} catch (Exception e) {
@@ -487,5 +518,128 @@ public class EditGameController implements Initializable{
 		return null;
 		
 	}
+
+	private boolean fileExists(File f, ChannelSftp sftp, String gameName, String fType) {
+
+		SftpATTRS attrs = null;
+
+		String fileSuffix = getFileExtention(f);
+
+		try {
+			attrs = sftp.stat(sftp.pwd() + String.format("%s%s%s", gameName, fType, fileSuffix));
+		} catch (SftpException e) {
+			return false;
+		}
+
+		return attrs != null;
+	}
 	
+	private boolean deleteFile(File f, ChannelSftp sftp, String gameName, String fType) {
+		
+		if (fileExists(f, sftp, gameName, fType)) {
+			try {
+				sftp.rm(String.format("%s%s%s", gameName, fType, getFileExtention(f)));
+				return true;
+			} catch (SftpException e) {
+				e.printStackTrace();
+				return false;
+			}
+		} else {
+			return false;
+		}
+		
+	}
+	
+	@FXML
+	public void saveGame() {
+		String[] fileTypes = {"Alert", "Soundtrack", "Background", "Win", "Lose"};
+		
+		boolean cont = true;
+		
+		for (File f : fileList) {
+			if (f == null) {
+				
+				cont = false;
+				
+				ButtonType yes = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
+				
+				Alert alert = new Alert(AlertType.CONFIRMATION, String.format("%s is null!", fileTypes[fileList.indexOf(f)]), yes);
+				
+				alert.setHeaderText(String.format("Delete %s?", gameName));
+				
+				alert.showAndWait();
+				
+				break;
+			}
+		}
+		
+		if(cont) {
+			
+			
+			String databaseURL = homeController.properties.getProperty("dbURL");
+			String databaseUserName = homeController.properties.getProperty("dbUserName");
+			String databasePassword = homeController.properties.getProperty("dbPassword");
+
+			try {
+				Connection con = DriverManager.getConnection(databaseURL, databaseUserName, databasePassword);
+
+				Statement statement = con.createStatement();
+
+				String SQL = String.format("SELECT * FROM leaderboard.games WHERE Name = \"%s\"", gameName);
+
+				ResultSet resultSet = statement.executeQuery(SQL);
+
+				System.out.println(String.format("%s", gameName));
+				
+				if(!resultSet.next()) {
+					SQL = String.format("call leaderboard.createGame('%s');", gameName);
+					//statement.execute(SQL);
+				}
+				
+				resultSet.close();
+				statement.close();
+				con.close();
+			}
+			catch (SQLException e) {
+				e.printStackTrace();
+			}
+			
+			try {
+				JSch jsch = new JSch();
+				Session session = jsch.getSession(smtpUsername, "aperriz.chickenkiller.com", 22);
+				session.setPassword(smtpPassword);
+				session.setConfig("StrictHostKeyChecking", "no"); 
+				session.connect();
+				
+				Channel channel = session.openChannel("sftp");
+				channel.connect();
+				ChannelSftp sftp = (ChannelSftp) channel;
+				
+				//System.out.println(sftp.pwd() + "/xampp/htdocs/game files");
+				
+				//alertSound, soundtrack, winSound, loseSound, backgroundImageFile
+				
+				for(File f : fileList) {
+					
+					if(f != null) {
+						
+						deleteFile(f, sftp, gameName, fileTypes[fileList.indexOf(f)]);
+						
+						
+					}
+					
+				}
+				
+				sftp.disconnect();
+				channel.disconnect();
+				session.disconnect();
+				
+				back();
+			}
+			catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+	}
 }
