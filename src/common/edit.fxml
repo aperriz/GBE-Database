@@ -12,18 +12,19 @@
       <Button layoutX="29.0" layoutY="14.0" mnemonicParsing="false" onAction="#back" text="Back" />
       <Button layoutX="732.0" layoutY="14.0" mnemonicParsing="false" onAction="#delGame" text="Delete" />
       <ImageView fx:id="backgroundImage" fitHeight="156.0" fitWidth="277.0" layoutX="37.0" layoutY="157.0" pickOnBounds="true" />
-      <Button fx:id="backgroundButton" layoutX="109.0" layoutY="356.0" mnemonicParsing="false" text="Set Background" />
+      <Button fx:id="backgroundButton" layoutX="109.0" layoutY="356.0" mnemonicParsing="false" onAction="#setBackground" text="Set Background" />
       <Label fx:id="alertToneLabel" contentDisplay="CENTER" layoutX="341.0" layoutY="164.0" minHeight="-Infinity" minWidth="-Infinity" prefWidth="200.0" text="No File Selected" textAlignment="CENTER" />
       <Label fx:id="soundtrackLabel" contentDisplay="CENTER" layoutX="341.0" layoutY="313.0" minHeight="-Infinity" minWidth="-Infinity" prefWidth="200.0" text="No File Selected" textAlignment="CENTER" />
-      <Button layoutX="372.0" layoutY="203.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="138.0" text="Set Alert Tone" />
-      <Button layoutX="372.0" layoutY="354.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="138.0" text="Set Soundtrack" />
+      <Button layoutX="372.0" layoutY="203.0" mnemonicParsing="false" onAction="#setAlertTone" prefHeight="39.0" prefWidth="138.0" text="Set Alert Tone" />
+      <Button layoutX="372.0" layoutY="354.0" mnemonicParsing="false" onAction="#setSoundtrack" prefHeight="39.0" prefWidth="138.0" text="Set Soundtrack" />
       <Label fx:id="fontLabel" contentDisplay="CENTER" layoutX="599.0" layoutY="75.0" minHeight="-Infinity" minWidth="-Infinity" prefWidth="200.0" text="lorem ipsum dolor sit amet" textAlignment="CENTER" />
-      <Button layoutX="630.0" layoutY="126.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="138.0" text="Set Font" />
+      <Button layoutX="630.0" layoutY="126.0" mnemonicParsing="false" onAction="#setFont" prefHeight="39.0" prefWidth="138.0" text="Set Font" />
       <ColorPicker fx:id="fontColorPicker" layoutX="618.0" layoutY="173.0" promptText="Font Color" style="-fx-background-color: #456e50; -fx-control-inner-background: #456e50;" />
       <Label fx:id="winLabel" contentDisplay="CENTER" layoutX="599.0" layoutY="222.0" minHeight="-Infinity" minWidth="-Infinity" prefWidth="200.0" text="No File Selected" textAlignment="CENTER" />
-      <Button layoutX="630.0" layoutY="261.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="138.0" text="Set Win Sound" />
+      <Button layoutX="630.0" layoutY="261.0" mnemonicParsing="false" onAction="#setWinSound" prefHeight="39.0" prefWidth="138.0" text="Set Win Sound" />
       <Label fx:id="lossLabel" contentDisplay="CENTER" layoutX="599.0" layoutY="313.0" minHeight="-Infinity" minWidth="-Infinity" prefWidth="200.0" text="No File Selected" textAlignment="CENTER" />
-      <Button layoutX="630.0" layoutY="354.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="138.0" text="Set Loss Sound" />
+      <Button layoutX="630.0" layoutY="354.0" mnemonicParsing="false" onAction="#setLossSound" prefHeight="39.0" prefWidth="138.0" text="Set Loss Sound" />
       <TextField fx:id="gameNameText" editable="false" layoutX="342.0" layoutY="32.0" promptText="Game Name" />
+      <Button layoutX="372.0" layoutY="414.0" mnemonicParsing="false" onAction="#saveGame" prefHeight="39.0" prefWidth="138.0" text="Save" />
    </children>
 </Pane>

@@ -28,9 +28,8 @@ public class homeController implements Initializable{
 	Connection con = null;
 	Statement statement = null;
 	ResultSet resultSet = null;
-	
-	String selectedGame = null;
 	public static Properties properties = new Properties();
+	String selectedGame = null;
 	
 	@FXML
 	private Button addGameButton;
@@ -57,16 +56,9 @@ public class homeController implements Initializable{
 		gameView.setId("mainView");
 		
 		try {
-
-			InputStream input = getClass().getResourceAsStream("/common/config.properties");
-
-			properties.load(input);
-
-			String databaseURL = properties.getProperty("dbURL");
-			String databaseUserName = properties.getProperty("dbUserName");
-			String databasePassword = properties.getProperty("dbPassword");
-
-			con = DriverManager.getConnection(databaseURL, databaseUserName, databasePassword);
+			properties = Base.properties;
+			
+			con = DriverManager.getConnection(Base.databaseURL, Base.databaseUserName, Base.databasePassword);
 
 			statement = con.createStatement();
 
@@ -85,7 +77,7 @@ public class homeController implements Initializable{
 			gameView.setItems(games);
 			
 		}
-		catch(IOException | SQLException e) {
+		catch(SQLException e) {
 			e.printStackTrace();
 		}
 		finally {
